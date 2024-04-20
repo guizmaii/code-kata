@@ -1,0 +1,16 @@
+name: Release
+
+# Triggered when a draft released is "published" (not a draft anymore)
+on:
+  release:
+    types: [ published ]
+
+env:
+  HELLO: world
+
+jobs:
+  release: # TODO JULES
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+    - run: env
