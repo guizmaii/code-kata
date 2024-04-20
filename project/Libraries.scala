@@ -2,15 +2,15 @@ import sbt.*
 
 object Libraries {
 
-  val zioVersion           = "2.0.22"
-  val slf4jVersion         = "2.0.9"
-  val zioConfigVersion     = "3.0.7"
-  val zioJsonVersion       = "0.6.2"
+  val zioVersion       = "2.0.22"
+  val slf4jVersion     = "2.0.9"
+  val zioConfigVersion = "3.0.7"
+  val zioJsonVersion   = "0.6.2"
 
-  val zio             = "dev.zio"             %% "zio"                % zioVersion
-  val prelude         = "dev.zio"             %% "zio-prelude"        % "1.0.0-RC21"
-  val zioLogging      = "dev.zio"             %% "zio-logging-slf4j2" % "2.1.15"
-  val logback         = "ch.qos.logback"       % "logback-classic"    % "1.5.6"
+  val zio        = "dev.zio"       %% "zio"                % zioVersion
+  val prelude    = "dev.zio"       %% "zio-prelude"        % "1.0.0-RC23"
+  val zioLogging = "dev.zio"       %% "zio-logging-slf4j2" % "2.1.15"
+  val logback    = "ch.qos.logback" % "logback-classic"    % "1.5.6"
 
   val zioJson = Seq(
     "dev.zio" %% "zio-json"        % zioJsonVersion,
