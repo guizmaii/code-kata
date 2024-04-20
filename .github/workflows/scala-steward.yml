@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Launch Scala Steward
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.3
       - uses: coursier/cache-action@v6.4.6
         with:
           job: ci
