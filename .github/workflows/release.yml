@@ -42,6 +42,7 @@ jobs:
         shell: bash
         run: sbt 'clean;test'
 
+  # Publish the CLI binary to the Github release
   release:
     needs: [ unit-tests ]
     timeout-minutes: 45
