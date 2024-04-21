@@ -43,6 +43,7 @@ jobs:
         run: sbt 'clean;test'
 
   # Publish the CLI binary to the Github release
+  # TODO: Linux-only for now. Add support for other platforms
   release:
     needs: [ unit-tests ]
     timeout-minutes: 45
