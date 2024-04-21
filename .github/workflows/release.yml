@@ -12,8 +12,6 @@ jobs:
   unit-tests:
     timeout-minutes: 45
     runs-on: ubuntu-latest
-    env:
-      GH_READ_PACKAGES: ${{ secrets.GH_READ_PACKAGES }}
     steps:
       - run: env
         shell: bash
@@ -48,8 +46,6 @@ jobs:
     needs: [ unit-tests ]
     timeout-minutes: 45
     runs-on: ubuntu-latest
-    env:
-      GH_READ_PACKAGES: ${{ secrets.GH_READ_PACKAGES }}
     steps:
       - run: env
         shell: bash
