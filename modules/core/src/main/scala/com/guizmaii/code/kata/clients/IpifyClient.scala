@@ -25,7 +25,7 @@ object IpifyClient {
 
 final class IpifyClientLive(sttpBackend: SttpBackend[Task, Any]) extends IpifyClient {
 
-  override def fetchMyPublicIP: Task[String] = {
+  override val fetchMyPublicIP: Task[String] = {
     val request =
       basicRequest
         .get(uri"https://api.ipify.org/?format=json")
