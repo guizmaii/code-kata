@@ -34,8 +34,8 @@ addCommandAlias("kata", "core/run")
 lazy val root =
   Project(id = "code-kata", base = file("."))
     .disablePlugins(RevolverPlugin)
-    .settings(noDoc*)
-    .settings(noPublishSettings*)
+    .settings(noDoc *)
+    .settings(noPublishSettings *)
     .aggregate(
       core
     )
@@ -45,7 +45,7 @@ lazy val core =
     .enablePlugins(BuildInfoPlugin)
     .enablePlugins(NativeImagePlugin)
     .settings(name := "core")
-    .settings(stdSettings*)
+    .settings(stdSettings *)
     .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
     .settings(
       // BuildInfo settings
