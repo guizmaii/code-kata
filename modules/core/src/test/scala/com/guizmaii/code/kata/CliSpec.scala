@@ -1,6 +1,7 @@
 package com.guizmaii.code.kata
 
 import com.guizmaii.code.kata.stubs.IpifyClientStub
+import com.guizmaii.code.kata.types.IpAddress
 import zio.test.*
 import zio.test.Assertion.*
 import zio.{Scope, Task, ULayer, ZIO, ZLayer}
@@ -15,7 +16,7 @@ object CliSpec extends ZIOSpecDefault {
           val client: ULayer[IpifyClientStub] =
             ZLayer.succeed {
               new IpifyClientStub {
-                override def fetchMyPublicIP: zio.Task[String] = ZIO.fail(new RuntimeException("Boom!"))
+                override def fetchMyPublicIP: Task[IpAddress] = ZIO.fail(new RuntimeException("Boom!"))
               }
             }
 
@@ -26,13 +27,13 @@ object CliSpec extends ZIOSpecDefault {
       },
       test("if the IPify client call succeeds, prints the receive public IP") {
         checkAll(Gen.boolean) { ipOnly =>
-          val ip             = "123"
+          val ip             = IpAddress("123")
           val expectedOutput = if (ipOnly) s"$ip\n" else s"Your public IP is: $ip\n"
 
           val client: ULayer[IpifyClientStub] =
             ZLayer.succeed {
               new IpifyClientStub {
-                override def fetchMyPublicIP: Task[String] = ZIO.succeed(ip)
+                override def fetchMyPublicIP: Task[IpAddress] = ZIO.succeed(ip)
               }
             }
 
