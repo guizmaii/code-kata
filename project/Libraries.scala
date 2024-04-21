@@ -9,7 +9,7 @@ object Libraries {
 
   val zio        = "dev.zio"       %% "zio"                % zioVersion
   val prelude    = "dev.zio"       %% "zio-prelude"        % "1.0.0-RC23"
-  val zioLogging = "dev.zio"       %% "zio-logging-slf4j2" % "2.1.17"
+  val zioLogging = "dev.zio"       %% "zio-logging-slf4j2" % "2.2.3"
   val logback    = "ch.qos.logback" % "logback-classic"    % "1.5.6"
   val cli        = "dev.zio"       %% "zio-cli"            % "0.5.0"
   val zioJson    = "dev.zio"       %% "zio-json"           % "0.6.2"
@@ -18,12 +18,6 @@ object Libraries {
     "com.softwaremill.sttp.client3" %% "core"     % sttpVersion,
     "com.softwaremill.sttp.client3" %% "zio"      % sttpVersion,
     "com.softwaremill.sttp.client3" %% "zio-json" % sttpVersion,
-  )
-
-  val zioConfig = Seq(
-    "dev.zio" %% "zio-config"          % zioConfigVersion,
-    "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
-    "dev.zio" %% "zio-config-typesafe" % zioConfigVersion,
   )
 
   val tests = Seq(
