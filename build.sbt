@@ -3,11 +3,11 @@ import Libraries.*
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-def appVersion = sys.env.getOrElse("APP_VERSION", "0.0.1-SNAPSHOT")
+def cliVersion = sys.env.getOrElse("CLI_VERSION", "0.0.1-SNAPSHOT")
 
 ThisBuild / envFileName                := ".env"
 ThisBuild / organization               := "com.guizmaii"
-ThisBuild / version                    := appVersion
+ThisBuild / version                    := cliVersion
 ThisBuild / scalaVersion               := "2.13.13"
 ThisBuild / scalafmtCheck              := true
 ThisBuild / scalafmtSbtCheck           := true
@@ -49,7 +49,7 @@ lazy val core =
     .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
     .settings(
       // BuildInfo settings
-      buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(appVersion)),
+      buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(cliVersion)),
       buildInfoPackage := "com.guizmaii.code.kata",
       buildInfoObject  := "BuildInfo",
     )

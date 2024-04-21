@@ -9,8 +9,88 @@ env:
   HELLO: world
 
 jobs:
-  release: # TODO JULES
-    timeout-minutes: 15
+  unit-tests:
+    timeout-minutes: 45
     runs-on: ubuntu-latest
+    env:
+      GH_READ_PACKAGES: ${{ secrets.GH_READ_PACKAGES }}
     steps:
-    - run: env
+      - run: env
+        shell: bash
+      - uses: actions/checkout@v3.5.2
+      - uses: coursier/cache-action@v6.4.3
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          components: 'native-image'
+      - name: Java env
+        shell: bash
+        run: | # Copied from https://github.com/graalvm/setup-graalvm/#quickstart-template
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+
+      - name: Use CI sbt jvmopts
+        shell: bash
+        run: |
+          mv .jvmopts-ci .jvmopts
+          cat .jvmopts
+
+      - name: Run tests
+        shell: bash
+        run: sbt 'clean;test'
+
+  release:
+    needs: [ unit-tests ]
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    env:
+      GH_READ_PACKAGES: ${{ secrets.GH_READ_PACKAGES }}
+    steps:
+      - run: env
+        shell: bash
+      - uses: actions/checkout@v3.5.2
+      - uses: coursier/cache-action@v6.4.3
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          components: 'native-image'
+      - name: Java env
+        shell: bash
+        run: | # Copied from https://github.com/graalvm/setup-graalvm/#quickstart-template
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+
+      - name: Use CI sbt jvmopts
+        shell: bash
+        run: |
+          mv .jvmopts-ci .jvmopts
+          cat .jvmopts
+
+      - name: Get the Github Release version
+        id: vars
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/*/}"
+
+      - name: Build native-image
+        shell: bash
+        run: sbt 'clean;nativeImage'
+        env:
+          CLI_VERSION: ${{ steps.vars.outputs.tag }}
+
+      - name: Upload CLI binary to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLI_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          gh version
+          gh auth status
+
+          # https://cli.github.com/manual/gh_release_upload
+          gh release upload ${CLI_VERSION} kata --clobber
+
+          echo "Success"
