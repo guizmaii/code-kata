@@ -27,18 +27,18 @@ object Main extends ZIOCliDefault {
     type Help = Help.type
     final case object Help extends Subcommand
 
-    final case class GetMyIP(verbose: Boolean, ipOnly: Boolean) extends Subcommand
+    final case class GetMyIP(debug: Boolean, ipOnly: Boolean) extends Subcommand
   }
   import Subcommand.*
 
   private val getMyIPCmd: Command[GetMyIP] =
     Command(
       name = "my-ip",
-      options = Options.boolean("verbose").alias("v") ++ Options.boolean("ip-only").alias("i"),
+      options = Options.boolean("debug").alias("d") ++ Options.boolean("ip-only").alias("i"),
       args = Args.none,
     )
       .withHelp(HelpDoc.p("Fetch your public IP"))
-      .map { case (verbose, ipOnly) => Subcommand.GetMyIP(verbose, ipOnly) }
+      .map { case (debug, ipOnly) => Subcommand.GetMyIP(debug, ipOnly) }
 
   private val getHelp: Command[Help] =
     Command(name = "help", options = Options.none, args = Args.none)
@@ -55,13 +55,13 @@ object Main extends ZIOCliDefault {
       summary = HelpDoc.Span.text("This is some documentation for the 'kata' CLI"),
       command = appCmd,
     ) {
-      case Subcommand.Help                     => cliApp.run(List.empty)
-      case Subcommand.GetMyIP(verbose, ipOnly) =>
+      case Subcommand.Help                   => cliApp.run(List.empty)
+      case Subcommand.GetMyIP(debug, ipOnly) =>
         Cli
           .printMyPublicIP(ipOnly)
           .provide(
             IpifyClient.live,
-            sttpClientLayer(verbose),
+            sttpClientLayer(debug),
           )
           .logError("Error while running fetch public IP")
     }
