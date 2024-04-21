@@ -7,11 +7,11 @@ object Libraries {
   val zioConfigVersion = "3.0.7"
   val sttpVersion      = "3.9.5"
 
-  val zio        = "dev.zio" %% "zio"         % zioVersion
-  val prelude    = "dev.zio" %% "zio-prelude" % "1.0.0-RC23"
-  val zioLogging = "dev.zio" %% "zio-logging" % "2.2.3"
-  val cli        = "dev.zio" %% "zio-cli"     % "0.5.0"
-  val zioJson    = "dev.zio" %% "zio-json"    % "0.6.2"
+  val zio        = "dev.zio" %% "zio"             % zioVersion
+  val prelude    = "dev.zio" %% "zio-prelude"     % "1.0.0-RC23"
+  val zioLogging = "dev.zio" %% "zio-logging-jpl" % "2.2.3"
+  val cli        = "dev.zio" %% "zio-cli"         % "0.5.0"
+  val zioJson    = "dev.zio" %% "zio-json"        % "0.6.2"
 
   val sttp = Seq(
     "com.softwaremill.sttp.client3" %% "core"     % sttpVersion,
