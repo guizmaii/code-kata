@@ -27,6 +27,8 @@ addCommandAlias("tc", "Test/compile")
 addCommandAlias("ctc", "clean; Test/compile")
 addCommandAlias("rctc", "reload; clean; Test/compile")
 
+addCommandAlias("kata", "core/run")
+
 // ### App Modules ###
 
 lazy val root =
