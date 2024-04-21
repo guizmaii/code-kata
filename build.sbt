@@ -32,8 +32,8 @@ addCommandAlias("rctc", "reload; clean; Test/compile")
 lazy val root =
   Project(id = "code-kata", base = file("."))
     .disablePlugins(RevolverPlugin)
-    .settings(noDoc*)
-    .settings(noPublishSettings*)
+    .settings(noDoc *)
+    .settings(noPublishSettings *)
     .aggregate(
       core
     )
@@ -42,7 +42,7 @@ lazy val core =
   (project in file("modules/core"))
     .enablePlugins(BuildInfoPlugin)
     .settings(name := "core")
-    .settings(stdSettings*)
+    .settings(stdSettings *)
     .settings(
       // BuildInfo settings
       buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(appVersion)),
