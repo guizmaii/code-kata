@@ -3,8 +3,6 @@ import sbt.*
 object Libraries {
 
   val zioVersion       = "2.0.22"
-  val slf4jVersion     = "2.0.9"
-  val zioConfigVersion = "3.0.7"
   val sttpVersion      = "3.9.5"
 
   val zio        = "dev.zio" %% "zio"             % zioVersion
