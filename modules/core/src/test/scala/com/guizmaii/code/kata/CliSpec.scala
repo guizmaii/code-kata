@@ -11,30 +11,35 @@ object CliSpec extends ZIOSpecDefault {
     suite("printMyPublicIP")(
       test("truthiness")(assertTrue(true)),
       test("fails if the IPify client call fails") {
-        val client: ULayer[IpifyClientStub] =
-          ZLayer.succeed {
-            new IpifyClientStub {
-              override def fetchMyPublicIP: zio.Task[String] = ZIO.fail(new RuntimeException("Boom!"))
+        checkAll(Gen.boolean) { ipOnly =>
+          val client: ULayer[IpifyClientStub] =
+            ZLayer.succeed {
+              new IpifyClientStub {
+                override def fetchMyPublicIP: zio.Task[String] = ZIO.fail(new RuntimeException("Boom!"))
+              }
             }
-          }
 
-        val result = Cli.printMyPublicIP.provideLayer(client)
+          val result = Cli.printMyPublicIP(ipOnly).provideLayer(client)
 
-        assertZIO(result.exit)(fails(anything))
+          assertZIO(result.exit)(fails(anything))
+        }
       },
       test("if the IPify client call succeeds, prints the receive public IP") {
-        val expected = "123"
+        checkAll(Gen.boolean) { ipOnly =>
+          val ip             = "123"
+          val expectedOutput = if (ipOnly) s"$ip\n" else s"Your public IP is: $ip\n"
 
-        val client: ULayer[IpifyClientStub] =
-          ZLayer.succeed {
-            new IpifyClientStub {
-              override def fetchMyPublicIP: Task[String] = ZIO.succeed(expected)
+          val client: ULayer[IpifyClientStub] =
+            ZLayer.succeed {
+              new IpifyClientStub {
+                override def fetchMyPublicIP: Task[String] = ZIO.succeed(ip)
+              }
             }
-          }
 
-        val result = Cli.printMyPublicIP.provideLayer(client)
+          val result = Cli.printMyPublicIP(ipOnly).provideLayer(client)
 
-        assertZIO(result)(isUnit) && assertZIO(TestConsole.output)(equalTo(Vector(s"Your public IP is: $expected\n")))
+          assertZIO(result)(isUnit) && assertZIO(TestConsole.output)(equalTo(Vector(expectedOutput)))
+        }
       },
     )
 

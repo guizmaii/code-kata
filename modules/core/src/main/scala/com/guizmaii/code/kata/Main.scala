@@ -27,14 +27,18 @@ object Main extends ZIOCliDefault {
     type Help = Help.type
     final case object Help extends Subcommand
 
-    final case class GetMyIP(verbose: Boolean) extends Subcommand
+    final case class GetMyIP(verbose: Boolean, ipOnly: Boolean) extends Subcommand
   }
   import Subcommand.*
 
   private val getMyIPCmd: Command[GetMyIP] =
-    Command(name = "my-ip", options = Options.boolean("verbose").alias("v"), args = Args.none)
+    Command(
+      name = "my-ip",
+      options = Options.boolean("verbose").alias("v") ++ Options.boolean("ip-only").alias("i"),
+      args = Args.none,
+    )
       .withHelp(HelpDoc.p("Fetch your public IP"))
-      .map(verbose => Subcommand.GetMyIP(verbose))
+      .map { case (verbose, ipOnly) => Subcommand.GetMyIP(verbose, ipOnly) }
 
   private val getHelp: Command[Help] =
     Command(name = "help", options = Options.none, args = Args.none)
@@ -51,9 +55,10 @@ object Main extends ZIOCliDefault {
       summary = HelpDoc.Span.text("This is some documentation for the 'kata' CLI"),
       command = appCmd,
     ) {
-      case Subcommand.Help             => cliApp.run(List.empty)
-      case Subcommand.GetMyIP(verbose) =>
-        Cli.printMyPublicIP
+      case Subcommand.Help                     => cliApp.run(List.empty)
+      case Subcommand.GetMyIP(verbose, ipOnly) =>
+        Cli
+          .printMyPublicIP(ipOnly)
           .provide(
             IpifyClient.live,
             sttpClientLayer(verbose),

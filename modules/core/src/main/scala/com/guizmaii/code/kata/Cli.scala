@@ -5,12 +5,13 @@ import zio.{RIO, ZIO}
 
 object Cli {
 
-  val printMyPublicIP: RIO[IpifyClient, Unit] =
+  def printMyPublicIP(ipOnly: Boolean): RIO[IpifyClient, Unit] =
     for {
       client  <- ZIO.service[IpifyClient]
       console <- ZIO.console
       ip      <- client.fetchMyPublicIP
-      _       <- console.printLine(s"Your public IP is: $ip")
+      result   = if (ipOnly) ip else s"Your public IP is: $ip"
+      _       <- console.printLine(result)
     } yield ()
 
 }
