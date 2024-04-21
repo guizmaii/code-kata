@@ -43,12 +43,23 @@ lazy val root =
 lazy val core =
   (project in file("modules/core"))
     .enablePlugins(BuildInfoPlugin)
+    .enablePlugins(NativeImagePlugin)
     .settings(name := "core")
     .settings(stdSettings*)
+    .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
     .settings(
       // BuildInfo settings
       buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(appVersion)),
       buildInfoPackage := "com.guizmaii.code.kata",
       buildInfoObject  := "BuildInfo",
     )
-    .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
+    .settings(
+      // sbt-native-image configs
+      Compile / mainClass  := Some("com.guizmaii.code.kata.Main"),
+      nativeImageVersion   := "21",
+      nativeImageJvm       := "graalvm-oracle", // See also https://github.com/coursier/jvm-index/pull/210#issuecomment-1637703847
+      nativeImageOptions += "--no-fallback",
+      nativeImageInstalled := insideCI.value,
+      nativeImageOutput    := (ThisBuild / baseDirectory).value / "kata",
+      Global / excludeLintKeys ++= Set(nativeImageVersion, nativeImageJvm), // Wrongly reported as unused keys by sbt
+    )
