@@ -107,10 +107,35 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: modules/*/target/*/scoverage-report/scoverage.xml
 
-  deploy-staging: # TODO JULES
-    needs: [ unit-tests ]
-    timeout-minutes: 15
+  native-image:
+    timeout-minutes: 45
     runs-on: ubuntu-latest
-    permissions: write-all
+    env:
+      GH_READ_PACKAGES: ${{ secrets.GH_READ_PACKAGES }}
     steps:
       - run: env
+        shell: bash
+      - uses: actions/checkout@v3.5.2
+      - uses: coursier/cache-action@v6.4.3
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          components: 'native-image'
+      - name: Java env
+        shell: bash
+        run: | # Copied from https://github.com/graalvm/setup-graalvm/#quickstart-template
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+
+      - name: Use CI sbt jvmopts
+        shell: bash
+        run: |
+          mv .jvmopts-ci .jvmopts
+          cat .jvmopts
+
+      - name: Build native-image
+        shell: bash
+        run: sbt 'clean;nativeImage'
