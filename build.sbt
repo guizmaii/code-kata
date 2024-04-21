@@ -3,11 +3,11 @@ import Libraries.*
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-def appVersion = sys.env.getOrElse("APP_VERSION", "0.0.1-SNAPSHOT")
+def cliVersion = sys.env.getOrElse("CLI_VERSION", "0.0.1-SNAPSHOT")
 
 ThisBuild / envFileName                := ".env"
 ThisBuild / organization               := "com.guizmaii"
-ThisBuild / version                    := appVersion
+ThisBuild / version                    := cliVersion
 ThisBuild / scalaVersion               := "2.13.13"
 ThisBuild / scalafmtCheck              := true
 ThisBuild / scalafmtSbtCheck           := true
@@ -27,13 +27,15 @@ addCommandAlias("tc", "Test/compile")
 addCommandAlias("ctc", "clean; Test/compile")
 addCommandAlias("rctc", "reload; clean; Test/compile")
 
+addCommandAlias("kata", "core/run")
+
 // ### App Modules ###
 
 lazy val root =
   Project(id = "code-kata", base = file("."))
     .disablePlugins(RevolverPlugin)
-    .settings(noDoc*)
-    .settings(noPublishSettings*)
+    .settings(noDoc *)
+    .settings(noPublishSettings *)
     .aggregate(
       core
     )
@@ -41,12 +43,23 @@ lazy val root =
 lazy val core =
   (project in file("modules/core"))
     .enablePlugins(BuildInfoPlugin)
+    .enablePlugins(NativeImagePlugin)
     .settings(name := "core")
-    .settings(stdSettings*)
+    .settings(stdSettings *)
+    .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
     .settings(
       // BuildInfo settings
-      buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(appVersion)),
+      buildInfoKeys    := Seq[BuildInfoKey](BuildInfoKey.action("version")(cliVersion)),
       buildInfoPackage := "com.guizmaii.code.kata",
       buildInfoObject  := "BuildInfo",
     )
-    .settings(libraryDependencies ++= Seq(cli, zioJson) ++ sttp)
+    .settings(
+      // sbt-native-image configs
+      Compile / mainClass  := Some("com.guizmaii.code.kata.Main"),
+      nativeImageVersion   := "21",
+      nativeImageJvm       := "graalvm-oracle", // See also https://github.com/coursier/jvm-index/pull/210#issuecomment-1637703847
+      nativeImageOptions += "--no-fallback",
+      nativeImageInstalled := insideCI.value,
+      nativeImageOutput    := (ThisBuild / baseDirectory).value / "kata",
+      Global / excludeLintKeys ++= Set(nativeImageVersion, nativeImageJvm), // Wrongly reported as unused keys by sbt
+    )
