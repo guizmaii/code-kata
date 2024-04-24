@@ -1,5 +1,6 @@
 package com.guizmaii.code.kata
 
+import com.guizmaii.code.kata.Courts.*
 import zio.Scope
 import zio.test.*
 import zio.test.Assertion.*
@@ -44,8 +45,49 @@ object MainSpec extends ZIOSpecDefault {
       }
     )
 
+  private val doOverlapSpec =
+    suite("doOverlap")(
+      test("a is strictly before b") {
+        val a      = BookingRecord(0, 0, 3)
+        val b      = BookingRecord(1, 5, 6)
+        val result = doOverlap(a, b)
+
+        assert(result)(isFalse)
+      },
+      test("a is finishing inside b") {
+        val a      = BookingRecord(0, 0, 3)
+        val b      = BookingRecord(1, 2, 5)
+        val result = doOverlap(a, b)
+
+        assert(result)(isTrue)
+      },
+      test("a is finishing at the same time b starts") {
+        val a      = BookingRecord(0, 0, 3)
+        val b      = BookingRecord(1, 3, 5)
+        val result = doOverlap(a, b)
+
+        assert(result)(isFalse)
+      },
+    )
+
+  private val assignCourtsSpec =
+    suite("assignCourts")(
+      test("truth")(assert(true)(isTrue)),
+      test("given 0 bookings, we must return 0 court") {
+        ???
+      },
+      test("given 1 booking, we must return 1 court") {
+        ???
+      },
+      test("given 2 overlaping bookings, we must returns 2 courts") {
+        ???
+      },
+    )
+
   override def spec: Spec[TestEnvironment & Scope, Any] =
     suite("Main")(
-      rateLimitSpec
+      rateLimitSpec,
+      assignCourtsSpec,
+      doOverlapSpec,
     )
 }

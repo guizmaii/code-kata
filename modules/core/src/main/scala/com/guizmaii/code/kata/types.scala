@@ -7,4 +7,7 @@ object types {
   type Name = Name.Type
   object Name extends Subtype[String]
 
+  type CourtId = CourtId.Type
+  object CourtId extends Subtype[Int]
+
 }
