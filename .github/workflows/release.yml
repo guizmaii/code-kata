@@ -9,6 +9,12 @@ env:
   HELLO: world
 
 jobs:
+  env:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ github.event }} | jq .
+
   unit-tests:
     timeout-minutes: 45
     runs-on: ubuntu-latest
