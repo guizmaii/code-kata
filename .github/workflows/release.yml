@@ -12,8 +12,11 @@ jobs:
   env:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo ${{ github.event }} | jq .
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
 
   unit-tests:
     timeout-minutes: 45
