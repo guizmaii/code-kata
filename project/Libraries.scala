@@ -9,7 +9,7 @@ object Libraries {
   val prelude    = "dev.zio" %% "zio-prelude"     % "1.0.0-RC25"
   val zioLogging = "dev.zio" %% "zio-logging-jpl" % "2.2.3"
   val cli        = "dev.zio" %% "zio-cli"         % "0.5.0"
-  val zioJson    = "dev.zio" %% "zio-json"        % "0.6.2"
+  val zioJson    = "dev.zio" %% "zio-json"        % "0.7.1"
 
   val sttp = Seq(
     "com.softwaremill.sttp.client3" %% "core"     % sttpVersion,
