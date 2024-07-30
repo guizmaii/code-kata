@@ -20,11 +20,16 @@ jobs:
           echo "LATEST_TAG=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
           echo "CURRENT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
           echo "SHORT_CURRENT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          
+          echo "CURRENT_SHA_ALT=$(git rev-parse ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
+          echo "SHORT_CURRENT_SHA_ALT=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
       - name: Debug context
         run: |
           echo LATEST_TAG: ${{ env.LATEST_TAG }}
           echo CURRENT_SHA: ${{ env.CURRENT_SHA }}
           echo SHORT_CURRENT_SHA: ${{ env.SHORT_CURRENT_SHA }}
+          echo CURRENT_SHA_ALT: ${{ env.CURRENT_SHA_ALT }}
+          echo SHORT_CURRENT_SHA_ALT: ${{ env.SHORT_CURRENT_SHA_ALT }}
       - run: env
 
   scalafmt:
