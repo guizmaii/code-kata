@@ -13,14 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.4
+        with:
+          fetch-depth: 0
       - name: Set context
         run: |
-          export CURRENT_SHA=$(git rev-parse --short HEAD)
-          
           echo "LATEST_TAG=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
-          echo "CURRENT_SHA=$CURRENT_SHA" >> $GITHUB_ENV
-          # See https://stackoverflow.com/a/64195658/2431728
-          echo "SHORT_CURRENT_SHA=`echo ${CURRENT_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo "CURRENT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "SHORT_CURRENT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Debug context
         run: |
           echo LATEST_TAG: ${{ env.LATEST_TAG }}
