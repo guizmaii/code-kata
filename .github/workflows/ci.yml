@@ -8,14 +8,15 @@ env:
   HELLO: world
 
 jobs:
-  scalafmt:
+  env:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4.1.4
       - name: Set context
         run: |
           export CURRENT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
-        
+          
           echo "LATEST_TAG=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
           echo "CURRENT_SHA=$CURRENT_SHA" >> $GITHUB_ENV
           # See https://stackoverflow.com/a/64195658/2431728
@@ -26,6 +27,11 @@ jobs:
           echo CURRENT_SHA: ${{ env.CURRENT_SHA }}
           echo SHORT_CURRENT_SHA: ${{ env.SHORT_CURRENT_SHA }}
       - run: env
+
+  scalafmt:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4.1.4
       - uses: coursier/cache-action@v6.4.6
         with:
