@@ -17,6 +17,25 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v4.1.4
+        with:
+          fetch-depth: 0
+      - name: Set context
+        run: |
+          echo "LATEST_TAG=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
+          echo "CURRENT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "SHORT_CURRENT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          
+          echo "CURRENT_SHA_ALT=$(git rev-parse ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
+          echo "SHORT_CURRENT_SHA_ALT=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
+      - name: Debug context
+        run: |
+          echo LATEST_TAG: ${{ env.LATEST_TAG }}
+          echo CURRENT_SHA: ${{ env.CURRENT_SHA }}
+          echo SHORT_CURRENT_SHA: ${{ env.SHORT_CURRENT_SHA }}
+          echo CURRENT_SHA_ALT: ${{ env.CURRENT_SHA_ALT }}
+          echo SHORT_CURRENT_SHA_ALT: ${{ env.SHORT_CURRENT_SHA_ALT }}
+
 
   unit-tests:
     timeout-minutes: 45

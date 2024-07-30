@@ -12,6 +12,11 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4.1.4
         with:
           fetch-depth: 0
@@ -30,7 +35,6 @@ jobs:
           echo SHORT_CURRENT_SHA: ${{ env.SHORT_CURRENT_SHA }}
           echo CURRENT_SHA_ALT: ${{ env.CURRENT_SHA_ALT }}
           echo SHORT_CURRENT_SHA_ALT: ${{ env.SHORT_CURRENT_SHA_ALT }}
-      - run: env
 
   scalafmt:
     timeout-minutes: 15
