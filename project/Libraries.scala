@@ -3,7 +3,7 @@ import sbt.*
 object Libraries {
 
   val zioVersion  = "2.1.6"
-  val sttpVersion = "3.9.7"
+  val sttpVersion = "3.9.8"
 
   val zio        = "dev.zio" %% "zio"             % zioVersion
   val prelude    = "dev.zio" %% "zio-prelude"     % "1.0.0-RC27"
