@@ -6,7 +6,7 @@ object Libraries {
   val sttpVersion = "3.9.7"
 
   val zio        = "dev.zio" %% "zio"             % zioVersion
-  val prelude    = "dev.zio" %% "zio-prelude"     % "1.0.0-RC27"
+  val prelude    = "dev.zio" %% "zio-prelude"     % "1.0.0-RC30"
   val zioLogging = "dev.zio" %% "zio-logging-jpl" % "2.2.4"
   val cli        = "dev.zio" %% "zio-cli"         % "0.5.0"
   val zioJson    = "dev.zio" %% "zio-json"        % "0.7.1"
